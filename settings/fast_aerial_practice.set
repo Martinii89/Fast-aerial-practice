@@ -1,0 +1,6 @@
+Fast Aerial timer plugin
+0|Load|plugin load fast_aerial_practice
+7
+0|Unload|plugin unload fast_aerial_practice
+7
+0|Reset Personal Best|aerialtimer_reset
