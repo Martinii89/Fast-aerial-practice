@@ -41,11 +41,19 @@ void FastAerialPractice::onUnload() {
 
 void FastAerialPractice::onHitBall(string eventName)
 {
+	if (!gameWrapper->IsInFreeplay())
+	{
+		return;
+	}
 	auto server = gameWrapper->GetGameEventAsServer();
 	if (server.IsNull())
 		return;
 	auto ball = server.GetBall();
 	if (ball.IsNull())
+		return;
+	if (hitted)
+		return;
+	if (currentAerial == nullptr)
 		return;
 
 	//Reset ball gravity
@@ -81,7 +89,7 @@ void FastAerialPractice::onHitBall(string eventName)
 
 void FastAerialPractice::onStartedDriving(string eventName)
 {
-	if (!gameWrapper->IsInGame())
+	if (!gameWrapper->IsInFreeplay())
 		return;
 
 	timeStart = gameWrapper->GetGameEventAsServer().GetSecondsElapsed();
@@ -89,6 +97,10 @@ void FastAerialPractice::onStartedDriving(string eventName)
 
 void FastAerialPractice::onReset(string eventName)
 {
+	if (!gameWrapper->IsInFreeplay())
+	{
+		return;
+	}
 	auto server = gameWrapper->GetGameEventAsServer();
 	if (server.IsNull())
 		return;
@@ -130,7 +142,7 @@ Vector FastAerialPractice::GetCarForwardVector(CarWrapper& car)
 
 void FastAerialPractice::Render(CanvasWrapper canvas)
 {
-	if (!gameWrapper->IsInGame() || popups.empty() || currentAerial == nullptr || chrono::duration_cast<std::chrono::seconds> (chrono::system_clock::now() - lastMsg).count() > 10)
+	if (!gameWrapper->IsInFreeplay() || popups.empty() || currentAerial == nullptr || chrono::duration_cast<std::chrono::seconds> (chrono::system_clock::now() - lastMsg).count() > 10)
 		return;
 
 	auto screenSize = canvas.GetSize();
